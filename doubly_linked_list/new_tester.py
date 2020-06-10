@@ -49,6 +49,17 @@ class DLList(unittest.TestCase):
         self.assertIsNone(self.dll.head.prev)
         self.assertEqual(len(self.dll), 3)
 
+    def test_switch_node_to_front(self):
+        self.dll.add_to_head(20)
+        self.dll.add_to_head(30)
+        self.dll.add_to_head(50)
+        self.dll.move_to_front(self.dll.tail)
+        self.assertEqual(self.dll.head.value, 1)
+        self.assertEqual(self.dll.head.next.value, 50)
+
+    def test_deleting_from_list(self):
+        self.assertEqual(self.dll.delete(self.dll.head), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
