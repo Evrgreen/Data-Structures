@@ -1,5 +1,7 @@
-from queue import Queue
-
+import sys
+sys.path.append('../stack')
+from stack import Stack
+from queue import CustomQueue
 
 """
 Binary search trees are a data structure that enforce an ordering over 
@@ -36,7 +38,6 @@ class BSTNode:
     # False if it does not
 
     def contains(self, target):
-        print("looping")
         if self.value == target:
             return True
         elif self.value < target:
@@ -50,14 +51,14 @@ class BSTNode:
     # Call the function `fn` on the value of each node
 
     def for_each(self, fn):
-        queue = Queue()
-        queue.put(self)
-        while(queue.qsize() > 0):
-            current = queue.get()
+        queue = CustomQueue()
+        queue.enqueue(self)
+        while(len(queue) > 0):
+            current = queue.dequeue()
             if current.left:
-                queue.put(current.left)
+                queue.enqueue(current.left)
             if current.right:
-                queue.put(current.right)
+                queue.enqueue(current.right)
             fn(current.value)
 
     # Part 2 -----------------------
@@ -73,23 +74,28 @@ class BSTNode:
     # Print the value of every node, starting with the given node,
     # in an iterative breadth first traversal
     def bft_print(self, node):
-        queue = Queue()
-        queue.put(node)
-        while(queue.qsize() > 0):
-            current = queue.get()
+        queue = CustomQueue()
+        queue.enqueue(node)
+        while(len(queue) > 0):
+            current = queue.dequeue()
             if current.left:
-                queue.put(current.left)
+                queue.enqueue(current.left)
             if current.right:
-                queue.put(current.right)
+                queue.enqueue(current.right)
             print(current.value)
 
     # Print the value of every node, starting with the given node,
     # in an iterative depth first traversal
     def dft_print(self, node):
-        if node:
-            print(node.value)
-            self.dft_print(node.left)
-            self.dft_print(node.right)
+        dft_stack = Stack()
+        dft_stack.push(node)
+        while len(dft_stack):
+            current = dft_stack.pop()
+            if current.right:
+                dft_stack.push(current.right)
+            if current.left:
+                dft_stack.push(current.left)
+            print(current.value)
 
     # Stretch Goals -------------------------
     # Note: Research may be required
@@ -98,13 +104,16 @@ class BSTNode:
 
     def pre_order_dft(self, node):
         if node:
-            self.pre_order_dft(node.left)
             print(node.value)
+            self.pre_order_dft(node.left)
             self.pre_order_dft(node.right)
 
     # Print Post-order recursive DFT
     def post_order_dft(self, node):
-        pass
+        if node:
+            self.post_order_dft(node.left)
+            self.post_order_dft(node.right)
+            print(node.value)
 
 
 bst = BSTNode(1)
@@ -115,4 +124,4 @@ bst.insert(6)
 bst.insert(3)
 bst.insert(4)
 bst.insert(2)
-bst.dft_print(bst)
+# bst.dft_print(bst)
